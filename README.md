@@ -6,6 +6,8 @@
 
 ## 用法
 
+> 推荐 512M 以上内存，RK3328 以上 CPU
+
 以 Debian 系发行版为例，以下所有命令都以 root 账号执行。
 
 ```bash
@@ -80,11 +82,82 @@ docker compose up -d
 
 ### 可选 - 负载均衡
 
-TODO
+如果有多个可用服务器，可以启用基于 HAProxy 的负载均衡以提高整体可用性。
+
+取消 HAProxy 段落的注释：
+
+###### ./docker-compose.yml
+
+```diff
+- # haproxy:
+- #   container_name: haproxy
+- #   image: haproxy:alpine
+- #   restart: always
+- #   volumes:
+- #     - ./haproxy:/usr/local/etc/haproxy
+- #   ports:
+- #     - 1080:1080/tcp
+- #     - 1080:1080/udp
++ haproxy:
++   container_name: haproxy
++   image: haproxy:alpine
++   restart: always
++   volumes:
++     - ./haproxy:/usr/local/etc/haproxy
++   ports:
++     - 1080:1080/tcp
++     - 1080:1080/udp
+```
+
+增加 naive 客户端：从 `ports` 改为 `expose`，并按照喜好重命名；
+
+还需要在 `./naive/` 文件夹内创建新的配置文件。
+
+###### ./docker-compose.yml
+
+```diff
+- naive:
++ naive-a:
+-   container_name: naive
++   container_name: naive-a
+    image: kwaabot/naive
+    restart: always
+    volumes:
+-     - ./naive/config.json:/etc/naive/config.json
++     - ./naive/config-a.json:/etc/naive/config.json
+-   # expose:
+-   #   - '1080'
++   expose:
++     - '1080'
+-   ports:
+-     - 1080:1080/tcp
+-     - 1080:1080/udp
+
++ naive-b:
++   container_name: naive-b
++   image: kwaabot/naive
++   restart: always
++   volumes:
++     - ./naive/config-b.json:/etc/naive/config.json
++   expose:
++     - '1080'
+```
+
+接下来在 `haproxy.cfg` 中导入服务器：
+
+###### ./haproxy/haproxy.cfg
+
+```diff
+backend naive-out
+  balance roundrobin
+- server naive naive:1080
++ server naive-a naive-a:1080
++ server naive-b naive-b:1080
+```
 
 ### 可选 - UDP over TCP
 
-为了使用 [UDP over TCP](https://sing-box.sagernet.org/configuration/shared/udp-over-tcp/)，你需要使用支持的服务端（例如 Sing Box）。
+为了使用 [UDP over TCP](https://sing-box.sagernet.org/configuration/shared/udp-over-tcp/)，你需要使用支持此特性的服务端（例如 Sing Box）。
 
 只需在客户端配置文件加上 `"udp_over_tcp": true`：
 
