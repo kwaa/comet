@@ -1,0 +1,96 @@
+{
+  "log": {
+    "level": "warn"
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "paopaodns",
+        "address": "udp://127.0.0.1",
+        "detour": "direct"
+      },
+      {
+        "tag": "block",
+        "address": "rcode://success"
+      }
+    ],
+    "rules": [
+      {
+        "geosite": "category-ads-all",
+        "server": "block",
+        "disable_cache": true
+      },
+      {
+        "outbound": "any",
+        "server": "paopaodns"
+      }
+    ],
+    "final": "paopaodns",
+    "strategy": "prefer_ipv4"
+  },
+  "inbounds": [
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "inet4_address": "172.19.0.1/30",
+      "auto_route": true,
+      "sniff": true
+    }
+  ],
+  "route": {
+    "geoip": {
+      "path": "/data/geoip.db",
+      "download_url": "https://github.com/1715173329/sing-geoip/releases/latest/download/geoip.db",
+      "download_detour": "proxy"
+    },
+    "geosite": {
+      "path": "/data/geosite.db",
+      "download_url": "https://github.com/1715173329/sing-geosite/releases/latest/download/geosite.db",
+      "download_detour": "proxy"
+    },
+    "rules": [
+      {
+        "port": 53,
+        "protocol": "dns",
+        "outbound": "dns-out"
+      },
+      {
+        "domain_keyword": [
+          "comet.local"
+        ],
+        "geosite": "cn",
+        "geoip": [
+          "private",
+          "cn"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "geosite": "category-ads-all",
+        "outbound": "block"
+      }
+    ],
+    "final": "proxy",
+    "auto_detect_interface": true
+  },
+  "outbounds": [
+    {
+      "type": "socks",
+      "tag": "proxy",
+      "server": "127.0.0.1",
+      "server_port": 1080
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    },
+    {
+      "type": "dns",
+      "tag": "dns-out"
+    }
+  ]
+}
