@@ -159,7 +159,7 @@ backend naive-out
 
 为了使用 [UDP over TCP](https://sing-box.sagernet.org/configuration/shared/udp-over-tcp/)，你需要使用支持此特性的服务端（例如 Sing Box）。
 
-只需在客户端配置文件加上 `"udp_over_tcp": true`：
+只需在客户端 `outbounds.proxy` 配置文件加上 `"udp_over_tcp": true`：
 
 ###### ./sing-box/config.json
 
