@@ -1,0 +1,5 @@
+{
+  "listen": "socks://0.0.0.0:1080",
+  "proxy": "https://user:pass@comet.local",
+  "log": ""
+}
