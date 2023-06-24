@@ -2,6 +2,8 @@
 
 实验性 Naiveproxy 透明网关. [WIP]
 
+> 配置未经严格测试，欢迎[反馈](https://github.com/kwaa/comet/discussions)或[提交 bug](https://github.com/kwaa/comet/issues)。
+
 ## 用法
 
 以 Debian 系发行版为例，以下所有命令都以 root 账号执行。
@@ -73,6 +75,8 @@ iptables -t nat -A POSTROUTING -o tun0 -j MASQUERADE
 ```bash
 docker compose up -d
 ```
+
+在你希望代理的设备（或主路由）上将默认网关和 DNS 改为运行此容器的局域网 IP。就是这样！
 
 ### 可选 - 负载均衡
 
