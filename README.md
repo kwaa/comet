@@ -76,7 +76,7 @@ iptables -t nat -A POSTROUTING -o tun0 -j MASQUERADE
 docker compose up -d
 ```
 
-在你希望代理的设备（或主路由）上将默认网关和 DNS 改为运行此容器的局域网 IP。就是这样！
+在你希望代理的设备（或主路由）上将默认网关和 DNS 改为 Comet 所在机器的局域网 IP。就是这样！
 
 ### 可选 - 负载均衡
 
@@ -84,4 +84,19 @@ TODO
 
 ### 可选 - UDP over TCP
 
-TODO
+为了使用 [UDP over TCP](https://sing-box.sagernet.org/configuration/shared/udp-over-tcp/)，你需要使用支持的服务端（例如 Sing Box）。
+
+只需在客户端配置文件加上 `"udp_over_tcp": true`：
+
+###### ./sing-box/config.json
+
+```diff
+{
+  "type": "socks",
+  "tag": "proxy",
+  "server": "127.0.0.1",
+- "server_port": 1080
++ "server_port": 1080,
++ "udp_over_tcp": true
+},
+```
