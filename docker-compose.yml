@@ -1,0 +1,65 @@
+version: '3'
+
+services:
+
+  sing-box:
+    container_name: sing-box
+    image: ghcr.io/sagernet/sing-box:latest
+    restart: always
+    network_mode: host
+    privileged: true
+    devices:
+      - /dev/net/tun
+    volumes:
+      - ./sing-box:/data
+    depends_on:
+      - naive
+    command: run -c /data/config.json
+
+  # paopaodns:
+  #   container_name: paopaodns
+  #   image: sliamb/paopaodns:latest
+  #   restart: always
+  #   volumes:
+  #     - ./paopaodns:/data
+  #   environment:
+  #     - TZ=Asia/Shanghai
+  #     - UPDATE=weekly
+  #     - DNS_SERVERNAME=Comet-PaoPaoDNS
+  #     - DNSPORT=53
+  #     - CNAUTO=yes
+  #     - CNFALL=yes
+  #     - CN_TRACKER=yes
+  #     - IPV6=no
+  #     - SOCKS5=no
+  #     # - CUSTOM_FORWARD=10.10.10.3:53
+  #     - AUTO_FORWARD=no
+  #     - SAFEMODE=no
+  #   ports:
+  #     - 53:53/udp
+  #     - 53:53/tcp
+  #     - 5304:5304/udp
+  #     - 5304:5304/tcp
+
+  # haproxy:
+  #   container_name: haproxy
+  #   image: haproxy:alpine
+  #   restart: always
+  #   volumes:
+  #     - ./haproxy:/usr/local/etc/haproxy
+  #   ports:
+  #     - 1080:1080/tcp
+  #     - 1080:1080/udp
+
+  naive:
+    container_name: naive
+    image: kwaabot/naive
+    restart: always
+    volumes:
+      - ./naive/config.json:/etc/naive/config.json
+    # expose:
+    #   - '1080'
+    ports:
+      - 1080:1080/tcp
+      - 1080:1080/udp
+
