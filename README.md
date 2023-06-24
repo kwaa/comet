@@ -14,7 +14,7 @@ apt install docker.io docker-compose git curl
 # 跳转到你希望的目录，此处将复制到 /opt/comet
 cd /opt
 # 复制存储库
-git clone github.com/kwaa/comet
+git clone https://github.com/kwaa/comet.git
 # 移动到 /opt/comet
 cd comet
 ```
