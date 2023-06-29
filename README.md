@@ -173,3 +173,34 @@ backend naive-out
 + "udp_over_tcp": true
 },
 ```
+
+### 可选 - PaoPaoDNS
+
+由于绕过 TUN 很麻烦，此存储库不再内置 [PaoPaoDNS](https://github.com/kkkgo/PaoPaoDNS)。
+
+如果你有能力（在同一个 Docker Compose 文件中）搞定这些，欢迎 PR！
+
+以下是搭建完成后 Sing Box 配置对应的修改：
+
+###### ./sing-box/config.json
+
+```diff
+{
+  "dns": {
+    "servers": [
+-     {
+-       "tag": "cloudflare",
+-       "address": "https://1.1.1.1/dns-query"
+-     },
+      {
+        "tag": "local",
+-       "address": "dhcp://auto",
++       "address": "udp://{{PaoPaoDNS 服务的 IP}}",
+        "detour": "direct"
+      },
+    ],
+    ...
+  }
+  ...
+}
+```
