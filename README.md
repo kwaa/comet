@@ -194,7 +194,7 @@ backend naive-out
 -     },
       {
         "tag": "local",
--       "address": "dhcp://auto",
+-       "address": "223.5.5.5",
 +       "address": "udp://{{PaoPaoDNS 服务的 IP}}",
         "detour": "direct"
       },
