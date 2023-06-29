@@ -16,30 +16,6 @@ services:
       - naive
     command: run -c /data/config.json
 
-  paopaodns:
-    container_name: paopaodns
-    image: sliamb/paopaodns:latest
-    restart: always
-    volumes:
-      - ./paopaodns:/data
-    environment:
-      - TZ=Asia/Shanghai
-      - UPDATE=weekly
-      - DNS_SERVERNAME=Comet-PaoPaoDNS
-      - DNSPORT=53
-      - CNAUTO=yes
-      - CNFALL=yes
-      - CN_TRACKER=yes
-      - IPV6=no
-      - SOCKS5=no
-      - AUTO_FORWARD=no
-      - SAFEMODE=no
-    ports:
-      - 53:53/udp
-      - 53:53/tcp
-      - 5304:5304/udp
-      - 5304:5304/tcp
-
   # haproxy:
   #   container_name: haproxy
   #   image: haproxy:alpine
