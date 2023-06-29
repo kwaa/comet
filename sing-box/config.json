@@ -5,8 +5,12 @@
   "dns": {
     "servers": [
       {
-        "tag": "paopaodns",
-        "address": "udp://127.0.0.1",
+        "tag": "cloudflare",
+        "address": "https://1.1.1.1/dns-query"
+      },
+      {
+        "tag": "local",
+        "address": "dhcp://auto",
         "detour": "direct"
       },
       {
@@ -22,10 +26,13 @@
       },
       {
         "outbound": "any",
-        "server": "paopaodns"
+        "server": "local"
+      },
+      {
+        "geosite": "cn",
+        "server": "local"
       }
     ],
-    "final": "paopaodns",
     "strategy": "prefer_ipv4"
   },
   "inbounds": [
