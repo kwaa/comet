@@ -6,7 +6,8 @@
     "servers": [
       {
         "tag": "cloudflare",
-        "address": "https://1.1.1.1/dns-query"
+        "address": "https://1.1.1.1/dns-query",
+        "detour": "direct"
       },
       {
         "tag": "local",
@@ -42,6 +43,12 @@
       "inet4_address": "172.19.0.1/30",
       "auto_route": true,
       "sniff": true
+    },
+    {
+      "type": "direct",
+      "tag": "dns-in",
+      "listen": "::",
+      "listen_port": 53
     }
   ],
   "route": {
@@ -57,7 +64,10 @@
     },
     "rules": [
       {
-        "port": 53,
+        "inbound": "dns-in",
+        "outbound": "dns-out"
+      },
+      {
         "protocol": "dns",
         "outbound": "dns-out"
       },
