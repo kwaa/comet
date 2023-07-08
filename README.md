@@ -4,6 +4,28 @@
 
 > 配置未经严格测试，欢迎[反馈](https://github.com/kwaa/comet/discussions)或[提交 bug](https://github.com/kwaa/comet/issues)。
 
+## 介绍
+
+### 这是什么
+
+这是一套基于 Docker Compose 的透明网关方案，简单修改配置便可启动。
+
+你需要一个（或多个）可用的 Naiveproxy 服务端。
+
+### 为什么是
+
+#### Naiveproxy
+
+我从 2019 年开始用 Naiveproxy，2022 年 10 月的大规模封锁（[net4people/bbs#129](https://github.com/net4people/bbs/issues/129)）证明了我的选择是对的。
+
+#### sing-box
+
+不熟悉 Clash / Clash Premium / Clash.Meta，就是这样。
+
+#### HAProxy
+
+因为它很流行。
+
 ## 用法
 
 > 推荐 512M 以上 RAM，RK3328 以上 CPU
@@ -21,7 +43,7 @@ git clone https://github.com/kwaa/comet.git
 cd comet
 ```
 
-接下来修改 Naiveproxy 和 Sing Box 的配置（替换 `comet.local, user, pass` 为你的域名、账号和密码）：
+接下来修改 Naiveproxy 和 sing-box 的配置（替换 `comet.local, user, pass` 为你的域名、账号和密码）：
 
 ###### ./naive/config.json
 
@@ -157,7 +179,7 @@ backend naive-out
 
 ### 可选 - UDP over TCP
 
-为了使用 [UDP over TCP](https://sing-box.sagernet.org/configuration/shared/udp-over-tcp/)，你需要使用支持此特性的服务端（例如 Sing Box）。
+为了使用 [UDP over TCP](https://sing-box.sagernet.org/configuration/shared/udp-over-tcp/)，你需要使用支持此特性的服务端（例如 sing-box）。
 
 只需在客户端 `outbounds.proxy` 配置文件加上 `"udp_over_tcp": true`：
 
@@ -180,7 +202,7 @@ backend naive-out
 
 如果你有能力（在同一个 Docker Compose 文件中）搞定这些，欢迎 PR！
 
-以下是搭建完成后 Sing Box 配置对应的修改：
+以下是搭建完成后 sing-box 配置对应的修改：
 
 ###### ./sing-box/config.json
 
