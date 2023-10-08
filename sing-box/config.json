@@ -5,52 +5,53 @@
   "dns": {
     "servers": [
       {
-        "tag": "cloudflare",
-        "address": "https://1.1.1.1/dns-query",
+        "tag": "dns-proxy",
+        "address": "h3://1.1.1.1/dns-query",
+        "address_resolver": "dns-resolver",
+        "strategy": "prefer_ipv4",
+        "detour": "proxy"
+      },
+      {
+        "tag": "dns-direct",
+        "address": "h3://dns.alidns.com/dns-query",
+        "address_resolver": "dns-resolver",
+        "strategy": "prefer_ipv4",
         "detour": "direct"
       },
       {
-        "tag": "local",
+        "tag": "dns-resolver",
         "address": "223.5.5.5",
         "detour": "direct"
       },
       {
-        "tag": "block",
+        "tag": "dns-block",
         "address": "rcode://success"
       }
     ],
     "rules": [
       {
+        "outbound": "any",
+        "server": "dns-resolver"
+      },
+      {
         "geosite": "category-ads-all",
-        "server": "block",
+        "server": "dns-block",
         "disable_cache": true
       },
       {
-        "outbound": "any",
-        "server": "local"
+        "geosite": "geolocation-!cn",
+        "server": "dns-proxy"
       },
       {
-        "geosite": "cn",
-        "server": "local"
+        "geosite": [
+          "cn",
+          "private"
+        ],
+        "server": "dns_direct"
       }
     ],
     "strategy": "prefer_ipv4"
   },
-  "inbounds": [
-    {
-      "type": "tun",
-      "tag": "tun-in",
-      "inet4_address": "172.19.0.1/30",
-      "auto_route": true,
-      "sniff": true
-    },
-    {
-      "type": "direct",
-      "tag": "dns-in",
-      "listen": "::",
-      "listen_port": 53
-    }
-  ],
   "route": {
     "geoip": {
       "path": "/data/geoip.db",
@@ -72,24 +73,85 @@
         "outbound": "dns-out"
       },
       {
+        "geosite": "category-ads-all",
+        "outbound": "block"
+      },
+      {
         "domain_keyword": [
           "comet.local"
-        ],
-        "geosite": "cn",
-        "geoip": [
-          "private",
-          "cn"
         ],
         "outbound": "direct"
       },
       {
-        "geosite": "category-ads-all",
-        "outbound": "block"
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "geosite": [
+              "geolocation-!cn"
+            ]
+          },
+          {
+            "geoip": [
+              "cn"
+            ],
+            "invert": true
+          }
+        ],
+        "outbound": "proxy"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "geosite": [
+              "cn"
+            ]
+          },
+          {
+            "geoip": [
+              "cn"
+            ]
+          }
+        ],
+        "outbound": "direct"
+      },
+      {
+        "geosite": [
+          "private"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "geoip": [
+          "cn",
+          "private"
+        ],
+        "outbound": "direct"
       }
     ],
-    "final": "proxy",
     "auto_detect_interface": true
   },
+  "inbounds": [
+    {
+      "type": "direct",
+      "tag": "dns-in",
+      "listen": "::",
+      "listen_port": 53
+    },
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "inet4_address": "172.19.0.1/30",
+      "inet6_address": "fdfe:dcba:9876::1/126",
+      "auto_route": true,
+      "strict_route": true,
+      "stack": "system",
+      "sniff": true,
+      "sniff_override_destination": false
+    }
+  ],
   "outbounds": [
     {
       "type": "socks",

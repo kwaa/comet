@@ -68,11 +68,6 @@ cd comet
 -       "comet.local",
 +       "example.com"
       ],
-      "geosite": "cn",
-      "geoip": [
-        "private",
-        "cn"
-      ],
       "outbound": "direct"
     },
   ],
@@ -239,3 +234,11 @@ ip6tables -t raw -A PREROUTING -m bpf --bytecode '29,48 0 0 0,84 0 0 240,21 0 25
 ip6tables -t raw -A PREROUTING -m bpf --bytecode '19,48 0 0 0,84 0 0 240,21 0 15 96,48 0 0 6,21 0 13 17,40 0 0 40,21 0 11 53,32 0 0 0,21 0 9 1610612736,40 0 0 4,37 7 0 128,40 0 0 52,21 0 5 1,40 0 0 54,21 0 3 1,40 0 0 56,21 0 1 0,6 0 0 65535,6 0 0 0' -j DROP
 ip6tables -t raw -A PREROUTING -p udp -m bpf --bytecode '23,40 0 0 40,21 0 20 53,32 0 0 52,21 0 18 65537,32 0 0 56,21 0 16 0,40 0 0 0,84 0 0 65520,21 0 13 24576,40 0 0 44,7 0 0 0,64 0 0 24,21 5 0 3222011905,21 0 8 536936448,64 0 0 28,21 0 6 0,64 0 0 32,21 3 4 0,64 0 0 30,37 2 0 255,53 0 1 64,6 0 0 1,6 0 0 0' -j DROP
 ```
+
+## 许可证
+
+本项目采用 WTFPL（你他妈的想干嘛就干嘛公共许可证）。有关更多详情，请参阅 [COPYING](COPYING) 文件。
+
+### 特别感谢
+
+- 从 [chika0801/sing-box-examples](https://github.com/chika0801/sing-box-examples) 参考了一些配置项
